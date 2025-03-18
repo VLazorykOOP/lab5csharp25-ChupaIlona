@@ -1,0 +1,218 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LAB5
+{
+    class Program
+    {
+        class Employee  // Базовий клас
+        {
+            protected string name = "не вказано";
+            protected int age = 0;
+
+            public string Name { get; set; }
+            public int Age { get; set; }
+
+            public Employee(string name, int age)
+            {
+                this.name = name;
+                this.age = age;
+                Console.WriteLine("Викликано конструктор Employee(string, int)");
+            }
+
+            public Employee()
+            {
+                name = "не вказано";
+                age = 0;
+                Console.WriteLine("Викликано конструктор Employee()");
+            }
+
+            public Employee(string name)
+            {
+                this.name = name;
+                age = 0;
+                Console.WriteLine("Викликано конструктор Employee(string)");
+            }
+
+            ~Employee()
+            {
+                Console.WriteLine("Знищується об'єкт Employee");
+            }
+
+            public virtual string Show()
+            {
+                string result = "Ім'я: " + name + "  Вік: " + age;
+                Console.WriteLine(result);
+                return result;
+            }
+        }
+
+        // Похідний клас "Робітник"
+        class Worker : Employee
+        {
+            protected string workType = "не вказано";
+            public string WorkType { get; set; }
+
+            public Worker(string name, int age, string workType)
+                : base(name, age)
+            {
+                this.workType = workType;
+                Console.WriteLine("Викликано конструктор Worker(string, int, string)");
+            }
+
+            public Worker(string workType)
+            {
+                this.workType = workType;
+                Console.WriteLine("Викликано конструктор Worker(string)");
+            }
+
+            public Worker()
+            {
+                Console.WriteLine("Викликано конструктор Worker()");
+            }
+
+            ~Worker()
+            {
+                Console.WriteLine("Знищується об'єкт Worker");
+            }
+
+            public override string Show()
+            {
+                return base.Show() + "  Тип роботи: " + WorkType;
+                
+            }
+        }
+
+        // Похідний клас "Кадри"
+        class HR : Employee
+        {
+            protected int managedEmployees =0;
+            public int ManagedEmployees { get; set; }
+
+            public HR(string name, int age, int managedEmployees)
+                : base(name, age)
+            {
+                this.managedEmployees = managedEmployees;
+                Console.WriteLine("Викликано конструктор HR(string, int, string)");
+            }
+
+            public HR(int managedEmployees)
+            {
+                this.managedEmployees = managedEmployees;
+                Console.WriteLine("Викликано конструктор HR(int)");
+            }
+
+            public HR()
+            {
+                Console.WriteLine("Викликано конструктор HR()");
+            }
+
+            ~HR()
+            {
+                Console.WriteLine("Знищується об'єкт HR");
+            }
+
+
+            public override string Show()
+            {
+                return base.Show() + "  Тип роботи: " + ManagedEmployees;
+            }
+        }
+
+        // Похідний клас "Інженер"
+        class Engineer : Employee
+        {
+            protected string specialty= "не вказано";
+            public string Specialty { get; set; }
+
+            public Engineer(string name, int age, string specialty)
+                : base(name, age)
+            {
+                this.specialty = specialty;
+                Console.WriteLine("Викликано конструктор Engineer(string, int, string)");
+            }
+
+            public Engineer(string specialty)
+            {
+                this.specialty = specialty;
+                Console.WriteLine("Викликано конструктор Engineer(string)");
+            }
+
+            public Engineer()
+            {
+                specialty = "не вказано";
+                Console.WriteLine("Викликано конструктор Engineer()");
+            }
+
+            ~Engineer()
+            {
+                Console.WriteLine("Знищується об'єкт Engineer");
+            }
+
+            public override string Show()
+            {
+                return base.Show() + "  Тип роботи: " + Specialty;
+            }
+        }
+
+        // Похідний клас "Адміністрація"
+        class Administration : Employee
+        {
+            protected string position="не вказано";
+            public string Position { get; set; }
+
+            public Administration(string name, int age, string position)
+                : base(name, age)
+            {
+                this.position = position;
+                Console.WriteLine("Викликано конструктор Administration(string,int, string)");
+            }
+
+            public Administration(string position)
+            {
+                this.position = position;
+                Console.WriteLine("Викликано конструктор Administration(string)");
+            }
+
+            public Administration()
+            {
+                position = "не вказано";
+                Console.WriteLine("Викликано конструктор Administration()");
+            }
+
+            ~Administration()
+            {
+                Console.WriteLine("Знищується об'єкт Administration");
+            }
+
+            public override string Show()
+            {
+                return base.Show() + "  Тип роботи: " + Position;
+            }
+        }
+
+
+        static void Main(string[] args)
+        {
+            task1_2();
+        }
+
+        public static void task1_2()
+        {
+            Console.WriteLine("Завдання 1 та 2");
+            Employee emp1 = new Employee("Sophia", 45);
+            emp1.Show();
+            Administration admin1 = new Administration("John", 33, "CEO");
+            admin1.Show();
+            Engineer engineer1 = new Engineer("Tom", 39, "Builder");
+            engineer1.Show();
+            HR hr1 = new HR("Katya", 26, 5);
+            hr1.Show();
+            Worker worker1 = new Worker();
+            worker1.Show();  
+        }
+    }
+}
