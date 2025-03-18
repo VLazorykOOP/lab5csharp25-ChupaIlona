@@ -1,0 +1,104 @@
+using System;
+using System.Linq;
+
+namespace lab5_4
+{
+    internal class Program
+    {
+        struct Country
+        {
+            public string Name { get; set; }
+            public string Capital { get; set; }
+            public double Population { get; set; }
+            public double Area { get; set; }
+
+            public Country(string name, string capital, double population, double area)
+            {
+                Name = name;
+                Capital = capital;
+                Population = population;
+                Area = area;
+            }
+
+            public override string ToString()
+            {
+                return $"Країна: {Name}, Столиця: {Capital}, Населення: {Population} млн, Площа: {Area} км²";
+            }
+        }
+
+        public record Country_recors(string Name, string Capital, double Population, double Area);
+
+        static void Main(string[] args)
+        {
+            //structura();
+            //tulpe();
+            //records();
+
+        }
+
+        public static void structura()
+        {
+            Country[] countries = new Country[5];
+            double value = 50;
+
+            countries[0] = new Country("Україна", "Київ", 37.73, 603628);
+            countries[1] = new Country("Польща", "Варшава", 36.69, 322575);
+            countries[2] = new Country("США", "Вашингтон", 340.1, 9867000);
+            countries[3] = new Country("Франція", "Париж", 68.29, 551695);
+            countries[4] = new Country("Італія", "Рим", 58.99, 302073);
+
+            // Фільтрація країн за чисельністю населення
+            Country[] new_countries = countries.Where(c => c.Population >= value).ToArray();
+
+            // Вивід нового масиву
+            Console.WriteLine("Країни після фільтрації:");
+            foreach (var country in new_countries)
+            {
+                Console.WriteLine(country);
+            }
+        }
+        public static void tulpe()
+        {
+            var countries = new (string, string, double, double)[]
+            {
+               (Name: "Україна", Capital: "Київ", Population: 37.73, Area: 603628.0),
+               (Name: "Польща", Capital: "Варшава", Population: 36.69, Area: 322575),
+               (Name: "США", Capital: "Вашингтон", Population: 340.1, Area: 9867000),
+               (Name: "Франція", Capital: "Париж", Population: 68.29, Area: 551695),
+               (Name: "Iталія", Capital: "Рим", Population: 58.99, Area: 302073)
+        };
+
+            Console.WriteLine("Країни з населенням менше 50 млн");
+            var filtered = countries.Where(c => c.Item3 < 50).ToArray();
+
+
+            foreach (var c in filtered)
+            {
+                Console.WriteLine(c.Item1 + ", Населення: " + c.Item3);
+            }
+        }
+        public static void records()
+        {
+            Country[] countries_records =
+            {
+                new Country("Україна", "Київ", 37.73, 603628),
+                new Country("Польща", "Варшава", 36.69, 322575),
+                new Country("США", "Вашингтон", 340.1, 9867000),
+                new Country("Франція", "Париж", 68.29, 551695),
+                new Country("Італія", "Рим", 58.99, 302073)
+            };
+
+            double value = 50;
+
+            // Фільтрація країн за чисельністю населення
+            var new_countries = countries_records.Where(c => c.Population >= value).ToArray();
+
+            // Вивід нового масиву
+            Console.WriteLine("Країни після фільтрації:");
+            foreach (var country in new_countries)
+            {
+                Console.WriteLine(country);
+            }
+        }
+    }
+    }
