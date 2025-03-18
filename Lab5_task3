@@ -1,0 +1,258 @@
+using System;
+using System.Collections.Concurrent;
+using System.Linq;
+
+namespace LAB5_3
+{
+    internal class Program
+    {
+       public abstract class PhoneBook
+            {
+                protected string name;
+                protected string address;
+                protected string telephone_number;
+
+                public PhoneBook(string n, string a, string t)
+                {
+                    name = n;
+                    address = a;
+                    telephone_number = t;
+                }
+                 
+                public string Name { get; set; }
+                public string Address { get; set; }
+                public string Telephone_number { get; set; }
+
+            public Person[] People { get; set; }
+                public Organisation[] Organisations { get; set; }
+                public Friend[] Friends { get; set; }
+
+                public abstract void PrintAllInfo();
+
+                public override string ToString()
+                {
+                    return $"Ім'я: {name}, Телефон: {telephone_number}, Адреса: {address}";
+                }
+
+            
+            }
+
+            public class Person : PhoneBook
+            {
+                public Person(string n, string a, string t) : base(n, a, t)
+                {
+                    Console.WriteLine("Створено об'єкт Person");
+
+                }
+
+                public override void PrintAllInfo()
+                {
+                    Console.WriteLine(ToString());
+                }
+
+                public void add(MyPhoneBook myPhoneBook)
+                {
+                    myPhoneBook.AddToPhoneBook(myPhoneBook.People, this);
+                Console.WriteLine(this.name + " додано до телефонного довідника");
+                }
+
+
+                 
+            }
+
+            public class Organisation : PhoneBook
+            {
+                private Person contact_person;
+            public Person Contact_person { get; set; }
+
+                public Organisation(string n, string a, string t, Person person) : base(n, a, t)
+                {
+                    this.contact_person = person;
+                    Console.WriteLine("Створено об'єкт Organisation");
+                }
+
+                public override void PrintAllInfo()
+                {
+                    Console.WriteLine($"{ToString()}, Контактна особа: {contact_person?.ToString()}");
+                }
+
+                public void add(MyPhoneBook myPhoneBook)
+                {
+                    myPhoneBook.AddToPhoneBook(myPhoneBook.Organisations, this);
+                Console.WriteLine(this.name + " додано до телефонного довідника");
+
+            }
+            }
+
+            public class Friend : PhoneBook
+            {
+                private DateTime birth_date;
+                public DateTime Birth_date { get; set; }
+
+                public Friend(string n, string a, string t, DateTime date) : base(n, a, t)
+                {
+                    this.birth_date = date;
+                    Console.WriteLine("Створено об'єкт Friend");
+                }
+
+                public override void PrintAllInfo()
+                {
+                    Console.WriteLine($"{ToString()}, День народження: {birth_date:yyyy-MM-dd}");
+                }
+
+                public void add(MyPhoneBook myPhoneBook)
+                {
+                    myPhoneBook.AddToPhoneBook(myPhoneBook.Friends, this);
+                Console.WriteLine(this.name + " додано до телефонного довідника");
+
+            }
+            }
+
+        public class MyPhoneBook
+        {
+            private Person[] people;
+            private Organisation[] organisations;
+            private Friend[] friends;
+
+            public MyPhoneBook(int size)
+            {
+                people = new Person[size];
+                organisations = new Organisation[size];
+                friends = new Friend[size];
+
+                // Виправлено: тепер властивості вказують на масиви
+                People = people;
+                Organisations = organisations;
+                Friends = friends;
+            }
+
+            public Person[] People { get; private set; }   // Тепер ці властивості не null
+            public Organisation[] Organisations { get; private set; }
+            public Friend[] Friends { get; private set; }
+
+            public void AddToPhoneBook(Person[] array, Person item)
+            {
+                if (array == null) return;
+
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (array[i] == null)
+                    {
+                        array[i] = item;
+                        
+                        return;
+                    }
+                }
+                Console.WriteLine("Немає місця для додавання");
+            }
+
+            public void AddToPhoneBook(Organisation[] array, Organisation item)
+            {
+                if (array == null) return;
+
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (array[i] == null)
+                    {
+                        array[i] = item;
+                        
+                        return;
+                    }
+                }
+                Console.WriteLine("Немає місця для додавання");
+            }
+
+            public void AddToPhoneBook(Friend[] array, Friend item)
+            {
+                if (array == null) return;
+
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (array[i] == null)
+                    {
+                        array[i] = item;
+                       
+                        return;
+                    }
+                }
+                Console.WriteLine("Немає місця для додавання");
+            }
+
+            public void find(string s)
+            {
+                bool found = false;
+
+                if (People != null)
+                {
+                    for (int i = 0; i < People.Length; i++)
+                    {
+                        if (People[i] != null &&
+                            (People[i].Name == s || People[i].Address == s || People[i].Telephone_number == s))
+                        {
+                            Console.WriteLine("Знайдено: " + People[i]);
+                            found = true;
+                            return;
+                        }
+                    }
+                }
+
+                if (Organisations != null)
+                {
+                    for (int i = 0; i < Organisations.Length; i++)
+                    {
+                        if (Organisations[i] != null &&
+                            (Organisations[i].Name == s || Organisations[i].Address == s || Organisations[i].Telephone_number == s))
+                        {
+                            Console.WriteLine("Знайдено: " + Organisations[i]);
+                            found = true;
+                            return;
+                        }
+                    }
+                }
+
+                if (Friends != null)
+                {
+                    for (int i = 0; i < Friends.Length; i++)
+                    {
+                        if (Friends[i] != null)
+                        {
+                            DateTime date;
+                            if (Friends[i].Name == s || Friends[i].Address == s || Friends[i].Telephone_number == s ||
+                                (DateTime.TryParse(s, out date) && Friends[i].Birth_date == date))
+                            {
+                                Console.WriteLine("Знайдено: " + Friends[i]);
+                                found = true;
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                if (!found)
+                {
+                    Console.WriteLine("Запис не знайдено.");
+                }
+            }
+        }
+
+
+        static void Main()
+            {
+                MyPhoneBook phoneBook = new MyPhoneBook(10);
+
+                Person person = new Person("Іван", "Київ", "12345");
+                Organisation org = new Organisation("Банк", "Київ", "67890", person);
+                Friend friend = new Friend("Олена", "Львів", "54321", new DateTime(1990, 5, 20));
+
+                person.add(phoneBook);
+                org.add(phoneBook);
+                friend.add(phoneBook);
+
+            
+
+
+            }
+        }
+    }
+
+
